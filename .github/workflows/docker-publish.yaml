@@ -11,7 +11,7 @@ jobs:
       contents: read
     steps:
       - name: Check out repo
-        uses: actions/checout@v3
+        uses: actions/checkout@v3
       - name: Login to GitHub Packages
         uses: docker/login-action@v1
         with:
