@@ -1,0 +1,12 @@
+#! /bin/sh
+
+echo $RENEWED_LINEAGE
+domain=`basename $RENEWED_LINEAGE`
+echo $domain
+connection=$HAPROXY_HOST:$HAPROXY_PORT
+echo -e "set ssl cert /etc/haproxy/certs/$domain.pem <<\n$(cat $RENEWED_LINEAGE/fullchain.pem)\n" | socat tcp-connect:$connection -
+echo -e "set ssl cert /etc/haproxy/certs/$domain.pem.key <<\n$(cat $RENEWED_LINEAGE/privkey.pem)\n" | socat tcp-connect:$connection -
+echo "commit ssl cert /etc/haproxy/certs/$domain.pem /etc/haproxy/certs/$domain.pem.key" | socat tcp-connect:$connection -
+cp $RENEWED_LINEAGE/fullchain.pem /etc/certificates/$domain.pem
+cp $RENEWED_LINEAGE/privkey.pem /etc/certificates/$domain.pem.key
+chown $USER:$GROUP /etc/certificates/$domain*

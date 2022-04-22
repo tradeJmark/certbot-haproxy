@@ -1,0 +1,14 @@
+#! /bin/sh
+
+if [ $DEBUG = true ]
+then staging='--test-cert'
+else staging=''
+fi
+
+for d in $DOMAINS
+do
+  certbot certonly --standalone -n --agree-tos --keep $staging --email $EMAIL --http-01-port=80 -d $d
+  cp /etc/letsencrypt/live/$d/fullchain.pem /etc/certificates/$d.pem
+  cp /etc/letsencrypt/live/$d/privkey.pem /etc/certificates/$d.pem.key
+  chown $USER:$GROUP /etc/certificates/$d*
+done
